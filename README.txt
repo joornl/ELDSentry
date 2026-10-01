@@ -42,6 +42,22 @@ The following files are included:
 
 --
 
+FIRMWARE COMPILATION AND LOAD INSTRUCTIONS
+
+To compile:
+
+(1) mkdir eldsentry
+(2) # Pull down eldsentry.ino from repository and place it in the directory that
+      was just created
+(3) arduino-cli compile -b teensy:avr:teensy41 eldsentry
+
+
+To load firmware onto teensy:
+(1) cd ~/.cache/arduino/sketches/<hash directory name containing compiled hex file>
+(2) sudo teensy_loader_cli  -w --mcu=TEENSY41 eldsentry.ino.hex
+
+--
+
 For more information, see:
 
   https://eldsentry.ornl.gov

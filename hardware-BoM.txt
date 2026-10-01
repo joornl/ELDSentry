@@ -1,0 +1,43 @@
+The hardware Bill Of Materials for the reference hardware that was used to build
+and test the ELDSentry firmware code.
+
+---+-----------------+----------+-----------+-----------------------------------
+No.| Item            | Quantity | Unit Cost | More Info.
+---+-----------------+----------+-----------+-----------------------------------
+1  | Teensy 4.1      | 1        | $31.50    | https://www.pjrc.com/store/
+   | Microcontroller |          |           | teensy41.html 
+---+-----------------+----------+-----------+-----------------------------------
+2  | CAN Transceiver | 2        | $3.95     | https://www.adafruit.com/product/
+   | TJA1051T/3      |          |           | 5708
+---+-----------------+----------+-----------+-----------------------------------
+3  | Perma-Proto     | 1        | $2.85     | https://www.adafruit.com/product/
+   |                 |          |           | 589
+---+-----------------+----------+-----------+-----------------------------------
+4  | J1939 9Pin      | 1        | $12.98    | https://www.amazon.com/MEIRIYFA-
+   |                 |          |           | Pigtail-Adapter-Diagnostic-Cars-
+   |                 |          |           | 30CM/dp/B0CS34GBCJ/ref=pd_bxgy_d_
+   |                 |          |           | sccl_1/137-5800787-7477318
+---+-----------------+----------+-----------+-----------------------------------
+5  | J1939 9Pin Pass | 1        | $18.99    | https://www.amazon.com/dp/B0CG9HL
+   |                 |          |           | 3F2/ref=sspa_dk_detail_5
+---+-----------------+----------+-----------+-----------------------------------
+6  | DC-DC BUCK-MODE | 1        | $3.12     | https://www.digikey.com/en/produc
+   | POWER MODULE    |          |           | ts/detail/dfrobot/DFR0571/9559261
+   | 8-2             |          |           |
+---+-----------------+----------+-----------+-----------------------------------
+7  | GIGASTONE 64GB  | 1        | $30.00    | https://www.amazon.com/dp/B07YWWD
+   |                 |          |           | JX4/ref=syn_sd_onsite_desktop_0?i
+   |                 |          |           | e=UTF8&aref=jCZ5PrqcR9
+---+-----------------+----------+-----------+-----------------------------------
+8  | Terminal blocks | 1        | $3.00     | https://www.amazon.com/Molence-Te
+   |                 |          |           | rminal-Connector-Terminals-26-18A
+   |                 |          |           | WG/dp/B09F6TC7RP/ref=sr_1_3
+---+-----------------+----------+-----------+-----------------------------------
+9  | Breadboard -    | 1        | $7.75     | https://www.sparkfun.com/breadboa
+   | Full-Size       |          |           | rd-full-size-bare.html
+---+-----------------+----------+-----------+-----------------------------------
+
+Total (Not inclusive of hook-up wires, zip ties, etc.):     $118.09   (Rounded
+up: $120)
+
+NOTE: Prices As of May 5, 2026

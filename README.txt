@@ -46,10 +46,8 @@ FIRMWARE COMPILATION AND LOAD INSTRUCTIONS
 
 To compile:
 
-(1) mkdir eldsentry
-(2) # Pull down eldsentry.ino from repository and place it in the directory that
-      was just created
-(3) arduino-cli compile -b teensy:avr:teensy41 eldsentry
+(1) # Pull down files in the repo as a zip file or using git commands
+(2) arduino-cli compile -b teensy:avr:teensy41 eldsentry
 
 
 To load firmware onto teensy:

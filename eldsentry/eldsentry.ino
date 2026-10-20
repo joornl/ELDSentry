@@ -56,7 +56,7 @@
 #include <math.h>
 
 #define COUNTER_FILE    "counter.txt"
-#define VERSION         "20260818.00"
+#define VERSION         "20261020.00"
 #define VERSION_FILE    "version.txt"
 #define FILE_MSG_MAX    500000
 
@@ -169,6 +169,8 @@ setup()
 void 
 loop()
 {
+    bool msg_read;
+
     if (msg_ctr >= FILE_MSG_MAX)
     {
         dataFile.flush();
@@ -239,12 +241,15 @@ loop()
 
     while (true)
     {
+        /* Initialize message read indicator */
+        msg_read = false;
+
         if (can1.read(msg))
         {
             /* Turn LED ON */
             digitalWrite(LED_BUILTIN, HIGH);
 
-            /* Write messages block to file if reached limit */
+            /* Write messages block to file if reached limit (1024 / 50 = 20 messages) */
             if (line_ctr > (int) (BLOCK_SZ / CAN_MSG_MAX_LEN))
             {
                 dataFile.write((const uint8_t *) buf, strlen((const char *) buf));
@@ -256,16 +261,14 @@ loop()
                 memset(buf, '\0', BLOCK_SZ);
             }
 
-            /* Initialize line buffer */
-            memset(line, '\0', sizeof(line));
-
             /* Capture elapsed time */
             elapsed_millis = millis();
 
             /* Write message to can2 interface */
             can2.write(msg);
 
-            /* Write message to line buffer */
+            /* Initialize line buffer and write message to line buffer */
+            memset(line, '\0', sizeof(line));
             snprintf((char *) line, CAN_MSG_MAX_LEN, 
                      "(%0.3f) can0 %08lX#%02X%02X%02X%02X%02X%02X%02X%02X\r\n",
                      (elapsed_millis * powf(10, -3)),
@@ -279,20 +282,14 @@ loop()
                      msg.buf[6],
                      msg.buf[7]);
 
-            /* Append contents of line buffer to block of CAN messages */
-            strncat((char *) buf, (const char *) line, CAN_MSG_MAX_LEN);
-
-            /* Increment line  & msg counters */
-            line_ctr++;
-            msg_ctr++;
+            /* Set message read indicator */
+            msg_read = true;
 
             /* Turn LED OFF */
             digitalWrite(LED_BUILTIN, LOW);
-            
-            /* Break out of while loop to increment frame count */
-            break;
         }
-        else if (can2.read(msg))
+
+        if (can2.read(msg))
         {
             /* These are the message IDs sent from Omnitracs ELD:
              *  18EA00A0
@@ -319,15 +316,11 @@ loop()
                 /* Write message to can1 interface */
                 can1.write(msg);
 
-                memset(line, '\0', sizeof(line));
-                snprintf((char *) line, CAN_MSG_MAX_LEN, "%08lX Allowed!\r\n", msg.id);
-                Serial.println((char *) line);
-            }
-            else
-            {
+                /* Initialize line buffer and write message to line buffer */
                 memset(line, '\0', sizeof(line));
                 snprintf((char *) line, CAN_MSG_MAX_LEN, 
-                         "%08lX#%02X%02X%02X%02X%02X%02X%02X%02X DROPPED!\r\n",
+                         "(%0.3f) can1 %08lX#%02X%02X%02X%02X%02X%02X%02X%02X\r\n",
+                         (elapsed_millis * powf(10, -3)),
                          msg.id,
                          msg.buf[0],
                          msg.buf[1],
@@ -337,8 +330,49 @@ loop()
                          msg.buf[5],
                          msg.buf[6],
                          msg.buf[7]);
-                Serial.println((char *) line);
+
+                /* Set message read indicator */
+                msg_read = true;
+
+                if (Serial)
+                {
+                    memset(line, '\0', sizeof(line));
+                    snprintf((char *) line, CAN_MSG_MAX_LEN, "%08lX Allowed!\r\n", msg.id);
+                    Serial.println((char *) line);
+                }
             }
+            else
+            {
+                if (Serial)
+                {
+                    memset(line, '\0', sizeof(line));
+                    snprintf((char *) line, CAN_MSG_MAX_LEN, 
+                             "%08lX#%02X%02X%02X%02X%02X%02X%02X%02X DROPPED!\r\n",
+                             msg.id,
+                             msg.buf[0],
+                             msg.buf[1],
+                             msg.buf[2],
+                             msg.buf[3],
+                             msg.buf[4],
+                             msg.buf[5],
+                             msg.buf[6],
+                             msg.buf[7]);
+                    Serial.println((char *) line);
+                }
+            }
+        }
+
+        if (msg_read)
+        {
+            /* Append contents of line buffer to block of CAN messages */
+            strncat((char *) buf, (const char *) line, CAN_MSG_MAX_LEN);
+
+            /* Increment line  & msg counters */
+            line_ctr++;
+            msg_ctr++;
+
+            /* Break out of while loop to increment frame count */
+            break;
         }
         else
         {
